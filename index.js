@@ -6,10 +6,10 @@ require('discord-reply')
 const client = new Discord.Client();
 const config = require("./config.json")
 
-const configFirebase = require("./configs/firebaseConfig.js") ///////SE NÃO FOR USAR ESSA BOSTA TIRA DPS
+const configFirebase = require("./configs/firebaseConfig.js") //SE NÃO FOR USAR ESSA BOSTA TIRA DPS
 configFirebase.config()
 const firebase = require("firebase");
-const database = firebase.database(); ////////ATÉ AQUI
+const database = firebase.database(); //ATÉ AQUI
 
 const { checar } = require("./commands/semprefixComNome");
 const torricelli = require("./commands/torricelli");
@@ -109,38 +109,26 @@ client.on("message", async message => {
   elevar(potencias, message_lower, message, reply)
 
   if(inMessage(message_lower, ["quanto", "loos"])){ 
+    let conta = message_lower;
+
+    if(conta.indexOf("?")>-1){
+      conta = conta.replace('?',"");
+    }
+
+    for(i = 0; i < conta.length; i++){
+      char = conta.charAt(i)
+      if((!isNaN(char) || char == '-' || char == '+'|| char =='√') && char !== " "){
+        conta = conta.slice(conta.indexOf(char)).split(/ +/g);
+        return;
+      }
+    }
+
+    calculadora = require("./commands/calculadora")
+    calculadora.calc(message, conta, reply)
+     
+  }else if(mensagem.indexOf("raiz")>-1 && mensagem.indexOf("loos")>-1){ 
     try{
-      calculadora = require("./commands/calculadora")
-
       let conta = message_lower;
-
-      function cortar(){
-        if(conta.indexOf("?")>-1){
-          conta = conta.replace('?',"");
-        }
-
-        for(i = 0; i < conta.length; i++){
-          char = conta.charAt(i)
-          if((!isNaN(char) || char == '-' || char == '+'|| char =='√') && char !== " "){
-            conta = conta.slice(conta.indexOf(char)).split(/ +/g);
-            return;
-          }
-        }
-        return conta;
-      }
-
-      cortar()
-      
-      calculadora.calc(message, conta, reply)
-      }catch(e){
-        console.log(e)
-      }
-      
-    }else if(mensagem.indexOf("raiz")>-1 && mensagem.indexOf("loos")>-1){ 
-      try{
-      calculadora = require("./commands/calculadora")
-
-      let args = message.content;
       if(args.indexOf("?")>-1){
         args = args.replace('?',"");
       }
@@ -174,15 +162,6 @@ client.on("message", async message => {
         console.log(e)
       }
       
-    }else{
-      if(mensagem == "<@!836295129144623115>" || mensagem == "loos"|| mensagem == "oi loos" || mensagem == "ei loos" ||  mensagem == "hey loos" || mensagem == "ola loos" || mensagem == "loos aopa" || mensagem == "eae loos" || mensagem == "loos eae"){
-         let msg = await reply("oi")
-      }else if((mensagem.indexOf("até mais")>-1 || mensagem.indexOf("flw")>-1 || mensagem.indexOf("tchau")>-1) && mensagem.indexOf('loos')>-1){
-         let msg = await  reply("Até mais "+"<@!"+ message.member.id+">")
-      }else if(mensagem.indexOf('loos')>-1){
-        const checar = require("./commands/semprefixComNome")
-        checar.checar(mensagem, message)
-      }
     }
   const dbupdate = require('./configs/dbupdate')
   dbupdate.update(database, message)
