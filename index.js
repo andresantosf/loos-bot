@@ -112,39 +112,26 @@ client.on("message", async message => {
     try{
       calculadora = require("./commands/calculadora")
 
-      let args = message.content;
-      if(args.indexOf("?")>-1){
-        args = args.replace('?',"");
-      }
-      
-      if(args.indexOf("raiz")>-1){
-        args = args.replace(/raiz/g,"√");
-      }else if(args.indexOf("r")>-1){
-        args = args.replace(/r/g,"√");
-      }
-
-      if(args.indexOf("elevado a")>-1){
-        args = args.replace(/elevado a/g,"^");
-      }
+      let conta = message_lower;
 
       function cortar(){
-        try{
-          for(i = 0; i < args.length; i++){
-            a = args.charAt(i)
-            if((!isNaN(a) || a == '-' || a == '+'|| a =='√') && a !== " "){
-              args = args.slice(args.indexOf(a)).split(/ +/g);
-              b +1
-            }
-          }
-        
-        }catch(e){
-          console.log(e)
-          return args
+        if(conta.indexOf("?")>-1){
+          conta = conta.replace('?',"");
         }
-      }
-      cortar()
 
-      calculadora.calc(message, args)
+        for(i = 0; i < conta.length; i++){
+          char = conta.charAt(i)
+          if((!isNaN(char) || char == '-' || char == '+'|| char =='√') && char !== " "){
+            conta = conta.slice(conta.indexOf(char)).split(/ +/g);
+            return;
+          }
+        }
+        return conta;
+      }
+
+      cortar()
+      
+      calculadora.calc(message, conta, reply)
       }catch(e){
         console.log(e)
       }
@@ -174,7 +161,6 @@ client.on("message", async message => {
       args = parseInt(cortar())
 
       resul = Math.sqrt(args)
-      console.log(resul)
 
       const mensagem = new Discord.MessageEmbed()
       .setColor('#8A2BE2')
@@ -202,7 +188,6 @@ client.on("message", async message => {
   dbupdate.update(database, message)
 
   if(channel.id == "883390802980646912" && message.attachments.size>0){
-    console.log(message.attachments.size>0)
     message.react('⭐')  
   }
 
