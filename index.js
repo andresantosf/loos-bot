@@ -36,6 +36,7 @@ var potencias = {
 }
 
 const id_mestre = 630727156510490624;
+const canal_de_artes = 883390802980646912
 const canal_de_musicas = 813218525266968616; //Apenas para uma funcionalidade de um servidor específico
 
 client.on("ready", () => {
@@ -119,54 +120,41 @@ client.on("message", async message => {
       char = conta.charAt(i)
       if((!isNaN(char) || char == '-' || char == '+'|| char =='√') && char !== " "){
         conta = conta.slice(conta.indexOf(char)).split(/ +/g);
-        return;
       }
     }
 
     calculadora = require("./commands/calculadora")
     calculadora.calc(message, conta, reply)
      
-  }else if(mensagem.indexOf("raiz")>-1 && mensagem.indexOf("loos")>-1){ 
-    try{
-      let conta = message_lower;
-      if(args.indexOf("?")>-1){
-        args = args.replace('?',"");
-      }
-      function cortar(){
-        try{
-          for(i = 0; i < args.length; i++){
-            a = args.charAt(i)
-            if((!isNaN(a) || a == '-') && a !== " "){
-              args = args.slice(args.indexOf(a)).split(/ +/g);
-            }
-          }
-        
-        }catch(e){
-          console.log(e)
-        }
-        return args
-      }
-      args = parseInt(cortar())
+  }else if(inMessage(message_lower, ["raiz", "loos"])){ //parou aqui
+    let conta = message_lower;
 
-      resul = Math.sqrt(args)
-
-      const mensagem = new Discord.MessageEmbed()
-      .setColor('#8A2BE2')
-      .setTitle('Calculadora')
-      .setDescription( 
-        `√**${args}** = **${resul}**`
-      )
-      reply(mensagem);
-
-      }catch(e){
-        console.log(e)
-      }
-      
+    if(conta.indexOf("?")>-1){
+      conta = conta.replace('?',"");
     }
-  const dbupdate = require('./configs/dbupdate')
-  dbupdate.update(database, message)
+    
+    for(i = 0; i < conta.length; i++){
+      char = conta.charAt(i)
+      if((!isNaN(char) || char == '-') && char !== " "){
+        conta = conta.slice(conta.indexOf(char)).split(/ +/g);
+      }
+    }
 
-  if(channel.id == "883390802980646912" && message.attachments.size>0){
+    resul = Math.sqrt(conta)
+    
+    if(isNaN(resul)) return;
+    
+    const mensagem = new Discord.MessageEmbed()
+    .setColor('#8A2BE2')
+    .setTitle('Calculadora')
+    .setDescription( 
+      `√**${conta}** = **${resul}**`
+    )
+
+    reply(mensagem);
+  }
+
+  if(channel.id == canal_de_artes && message.attachments.size>0){
     message.react('⭐')  
   }
 

@@ -47,10 +47,10 @@ module.exports = {
       .setDescription( 
         eval(resultado)
       )
+      reply(mensagem);
     }catch(e){
       reply("Acho que escreveu algo errado, mas pode ser apenas a minha burrice... 😐")
     }
 
-    reply(mensagem);
   }
 }
