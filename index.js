@@ -1,6 +1,9 @@
 //const keepAlive = require('./server.js');
 	 
 //keepAlive();
+
+version = 0.5
+
 const Discord = require("discord.js");
 require('discord-reply')
 const client = new Discord.Client();
@@ -86,6 +89,14 @@ client.on("message", async message => {
   var message_lower = message.content.toLocaleLowerCase()
   var mensagem = message_content; //Isso aqui é só pra ele n quebrar, tira dps
 
+  if(message_content.startsWith(`<@!${client.user.id}>`) ||  message_content.startsWith(`<@${client.user.id}>`)){
+    return message.channel.send(`🧪 Olá ${message.author}! Meu prefixo é \`\`${config.prefix}\`\`, Se precisar de ajuda com o dever eu estarei aqui 😉`) 
+  }
+
+  if(channel.id == canal_de_artes && message.attachments.size>0){
+    message.react('⭐')  
+  }
+
   if(channel.id == canal_de_musicas && message.content.indexOf("fix")==-1){
     setTimeout(() =>{
       message.delete()
@@ -126,7 +137,7 @@ client.on("message", async message => {
     calculadora = require("./commands/calculadora")
     calculadora.calc(message, conta, reply)
      
-  }else if(inMessage(message_lower, ["raiz", "loos"])){ //parou aqui
+  }else if(inMessage(message_lower, ["raiz", "loos"])){ 
     let conta = message_lower;
 
     if(conta.indexOf("?")>-1){
@@ -154,11 +165,7 @@ client.on("message", async message => {
     reply(mensagem);
   }
 
-  if(channel.id == canal_de_artes && message.attachments.size>0){
-    message.react('⭐')  
-  }
-
-  if(!message.content.startsWith(config.prefix)) return;
+  if(!message.content.startsWith(config.prefix)) return; ///daqui pra baixo apenas comandos
   
   const args_s = message.content.slice(config.prefix.length).trim().split(/ +/g);
   const args = []
@@ -177,14 +184,7 @@ client.on("message", async message => {
     }
   }
 
-  class background{
-    constructor(link,value){
-      this.link = link
-      this.value = value
-    }
-  }
-  
-  //Comandos==================================================================================================================================
+  //Comandos=====================================================================
   if(comando === "servidores"){
     console.log(client.guilds.name)
   }
@@ -315,7 +315,10 @@ client.on("message", async message => {
   }else if(comando === "torricelli"){
     torricelli = require("./commands/torricelli")
     torricelli.torricelli(message, args, variavel)
-    
+
+  }else if(comando === "version") { 
+    message.channel.send("Loos V_0.2")
+
   }else if(comando === "addg"){
     if(args_s == null){
       return
